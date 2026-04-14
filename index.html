@@ -1,1 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Discord · Community Chat</title>
+    <!-- Font Awesome 6 (free icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0e0e10;
+            height: 100vh;
+            overflow: hidden;
+            color: #eef2ff;
+        }
+
+        /* Discord-like loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1e1f22;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.4s ease-out, visibility 0.4s ease-out;
+            backdrop-filter: blur(0px);
+        }
+
+        .loading-content {
+            text-align: center;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .discord-logo-loading {
+            font-size: 72px;
+            color: #5865f2;
+            margin-bottom: 24px;
+            animation: pulseGlow 1.8s infinite ease-in-out;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid #2b2d31;
+            border-top: 4px solid #5865f2;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        .loading-text {
+            font-size: 16px;
+            font-weight: 500;
+            color: #dbdee1;
+            letter-spacing: 0.5px;
+            margin-top: 16px;
+        }
+
+        .loading-dots {
+            display: inline-flex;
+            gap: 4px;
+        }
+
+        .loading-dots span {
+            width: 6px;
+            height: 6px;
+            background: #b5bac1;
+            border-radius: 50%;
+            display: inline-block;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.7; text-shadow: 0 0 0px #5865f2; }
+            50% { opacity: 1; text-shadow: 0 0 12px #5865f2; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* hide loader after fade out */
+        .loading-overlay.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* Main app (initially hidden until loader finishes) */
+        .discord-app {
+            display: flex;
+            height: 100vh;
+            width: 100%;
+            background: #1e1f22;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .discord-app.visible {
+            opacity: 1;
+        }
+
+        /* Sidebar channels */
+        .channels-sidebar {
+            width: 280px;
+            background: #1e1f22;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #2b2d31;
+            position: relative;
+        }
+
+        .server-header {
+            padding: 16px 20px;
+            background: #1e1f22;
+            border-bottom: 1px solid #2b2d31;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            color: #dbdee1;
+        }
+
+        .server-header i {
+            color: #b5bac1;
+        }
+
+        .channels-list {
+            flex: 1;
+            padding: 12px 8px;
+            overflow-y: auto;
+        }
+
+        .channel-category {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: #949ba4;
+            padding: 16px 8px 4px 8px;
+        }
+
+        .channel-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 8px;
+            margin: 1px 0;
+            border-radius: 8px;
+            color: #b5bac1;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.1s ease;
+            cursor: pointer;
+        }
+
+        .channel-item:hover {
+            background: #2e3036;
+            color: #dbdee1;
+        }
+
+        .channel-item.active {
+            background: #2e3036;
+            color: #ffffff;
+        }
+
+        .channel-item i {
+            width: 24px;
+            font-size: 18px;
+        }
+
+        /* User panel bottom left */
+        .user-panel {
+            background: #1e1f22;
+            border-top: 1px solid #2b2d31;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+
+        .user-panel:hover {
+            background: #2b2d31;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #5865f2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            color: white;
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }
+
+        .user-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: #dbdee1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .change-name-btn {
+            font-size: 11px;
+            color: #949ba4;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 2px;
+            cursor: pointer;
+        }
+
+        .change-name-btn:hover {
+            color: #eef2ff;
+            text-decoration: underline;
+        }
+
+        /* Main chat */
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #313338;
+            min-width: 0;
+        }
+
+        .chat-header {
+            height: 48px;
+            background: #2b2d31;
+            border-bottom: 1px solid #1e1f22;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            font-weight: 600;
+            font-size: 16px;
+            gap: 8px;
+        }
+
+        .channel-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .close-button {
+            background: transparent;
+            border: none;
+            color: #b5bac1;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-button:hover {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 16px 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            scroll-behavior: smooth;
+        }
+
+        .message-row {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            color: white;
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 4px;
+        }
+
+        .message-author {
+            font-weight: 600;
+            font-size: 16px;
+            color: #ffffff;
+        }
+
+        .timestamp {
+            font-size: 11px;
+            color: #a3a6aa;
+            font-weight: 400;
+        }
+
+        .message-text {
+            font-size: 15px;
+            line-height: 1.4;
+            color: #dbdee1;
+            word-wrap: break-word;
+            margin-top: 2px;
+        }
+
+        .message-image {
+            margin-top: 8px;
+            max-width: 400px;
+            max-height: 300px;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+
+        .message-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+        }
+
+        .chat-input-container {
+            background: #2b2d31;
+            padding: 8px 16px 16px 16px;
+        }
+
+        .input-wrapper {
+            background: #383a40;
+            border-radius: 36px;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            border: 1px solid #4e5058;
+            gap: 6px;
+        }
+
+        .input-wrapper input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 12px 0;
+            color: #eef2ff;
+            font-size: 15px;
+            outline: none;
+            font-family: 'Inter', monospace;
+        }
+
+        .input-wrapper input::placeholder {
+            color: #9aa0a8;
+        }
+
+        .input-wrapper button {
+            background: transparent;
+            border: none;
+            color: #b5bac1;
+            font-size: 22px;
+            cursor: pointer;
+            padding: 6px 8px;
+            transition: 0.1s;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper button:hover {
+            color: #eef2ff;
+        }
+
+        .image-upload-btn {
+            font-size: 20px;
+            cursor: pointer;
+            padding: 6px 4px;
+            color: #b5bac1;
+        }
+
+        .image-upload-btn:hover {
+            color: #eef2ff;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        /* Members sidebar */
+        .members-sidebar {
+            width: 260px;
+            background: #1e1f22;
+            border-left: 1px solid #2b2d31;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .members-header {
+            padding: 20px 16px 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #949ba4;
+            letter-spacing: 0.5px;
+        }
+
+        .member-list {
+            padding: 0 8px;
+        }
+
+        .member-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 8px;
+            border-radius: 8px;
+            margin: 2px 0;
+        }
+
+        .member-avatar-small {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+            color: white;
+        }
+
+        .member-info {
+            flex: 1;
+        }
+
+        .member-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #dbdee1;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #23a55a;
+            margin-right: 6px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1e1f22;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3b3d44;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- LOADING OVERLAY (Discord style) -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="discord-logo-loading">
+                <i class="fa-brands fa-discord"></i>
+            </div>
+            <div class="loading-spinner"></div>
+            <div class="loading-text">
+                Connecting to chat
+                <div class="loading-dots">
+                    <span>.</span><span>.</span><span>.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP (initially hidden) -->
+    <div class="discord-app" id="discordApp">
+        <!-- CHANNELS SIDEBAR -->
+        <div class="channels-sidebar">
+            <div class="server-header">
+                <i class="fa-brands fa-discord"></i> Discord
+            </div>
+            <div class="channels-list" id="channelsList">
+                <div class="channel-category">TEXT CHANNELS</div>
+            </div>
+            <!-- Bottom user panel with pfp and change name -->
+            <div class="user-panel" id="userPanel">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <div class="user-info">
+                    <div class="user-name" id="displayUsername">User12312412312</div>
+                    <div class="change-name-btn" id="changeNameBtn">
+                        <i class="fa-regular fa-pen-to-square"></i> Change name
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN CHAT AREA -->
+        <div class="chat-main">
+            <div class="chat-header">
+                <div class="channel-info">
+                    <i class="fa-solid fa-hashtag"></i> <span id="currentChannelName">general</span>
+                </div>
+                <button class="close-button" id="closeButton" title="Leave server">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="chat-messages" id="chatMessagesContainer"></div>
+            <div class="chat-input-container">
+                <div class="input-wrapper">
+                    <input type="text" id="messageInput" placeholder="Message #general" autocomplete="off">
+                    <label for="fileInput" class="image-upload-btn" title="Send an image">
+                        <i class="fa-regular fa-image"></i>
+                    </label>
+                    <input type="file" id="fileInput" accept="image/*">
+                    <button id="sendMsgBtn"><i class="fa-regular fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MEMBERS SIDEBAR -->
+        <div class="members-sidebar">
+            <div class="members-header">
+                <i class="fa-regular fa-user"></i> MEMBERS — 8 online
+            </div>
+            <div class="member-list" id="memberList"></div>
+            <div class="members-header" style="margin-top: 12px;">
+                <i class="fa-regular fa-circle-check"></i> YOU
+            </div>
+            <div class="member-list">
+                <div class="member-item" id="youMemberItem">
+                    <div class="member-avatar-small" style="background: #5865f2;" id="youAvatar">U</div>
+                    <div class="member-info">
+                        <div class="member-name" id="youMemberName"><span class="status-dot"></span> User12312412312</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ---------- PERSISTENT USERNAME ----------
+        const STORAGE_KEY = "discord_chat_username";
+        let USER_NAME = localStorage.getItem(STORAGE_KEY) || "User12312412312";
+        const USER_AVATAR_COLOR = "#5865f2";
+
+        // ---------- FAKE USERS (regular people, no AI labels) ----------
+        const fakeUsers = [
+            { id: "u1", name: "AlexMorgan", avatarColor: "#9b59b6", status: "online" },
+            { id: "u2", name: "JadeWinters", avatarColor: "#3498db", status: "online" },
+            { id: "u3", name: "MarcusV", avatarColor: "#e67e22", status: "online" },
+            { id: "u4", name: "SamCortex", avatarColor: "#2ecc71", status: "online" },
+            { id: "u5", name: "LunaRae", avatarColor: "#f1c40f", status: "online" },
+            { id: "u6", name: "DexterK", avatarColor: "#e74c3c", status: "online" },
+            { id: "u7", name: "NinaSky", avatarColor: "#1abc9c", status: "online" },
+            { id: "u8", name: "RileyChen", avatarColor: "#34495e", status: "online" }
+        ];
+
+        // ---------- CHANNELS ----------
+        const channels = [
+            { id: "ch1", name: "general", icon: "fa-hashtag" },
+            { id: "ch2", name: "gaming", icon: "fa-gamepad" },
+            { id: "ch3", name: "music", icon: "fa-music" },
+            { id: "ch4", name: "tech", icon: "fa-microchip" },
+            { id: "ch5", name: "art", icon: "fa-palette" }
+        ];
+
+        // Message storage per channel
+        let messagesByChannel = {};
+        let currentChannelId = "ch1";
+        let nextMsgId = 0;
+        let simulationInterval = null;
+
+        // Image URLs for fake users
+        const fakeImageUrls = [
+            "https://picsum.photos/id/10/400/300",
+            "https://picsum.photos/id/15/400/300",
+            "https://picsum.photos/id/26/400/300",
+            "https://picsum.photos/id/29/400/300",
+            "https://picsum.photos/id/96/400/300",
+            "https://picsum.photos/id/155/400/300",
+            "https://picsum.photos/id/169/400/300",
+            "https://picsum.photos/id/20/400/300",
+            "https://picsum.photos/id/42/400/300",
+            "https://picsum.photos/id/91/400/300"
+        ];
+
+        function getRandomImageUrl() {
+            return fakeImageUrls[Math.floor(Math.random() * fakeImageUrls.length)];
+        }
+
+        function getTimeStamp() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2,'0');
+            const minutes = now.getMinutes().toString().padStart(2,'0');
+            return `Today at ${hours}:${minutes}`;
+        }
+
+        function randomItem(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        // ---------- MESSAGE GENERATION ----------
+        const genericMessages = [
+            "Hey everyone! What's up? 👋",
+            "Just finished work, finally some free time.",
+            "Has anyone seen the new movie that just dropped?",
+            "I'm thinking about ordering pizza tonight 🍕",
+            "This server is so chill, I love it.",
+            "Does anyone have game recommendations?",
+            "Learning guitar is harder than I thought 😅",
+            "Weekend plans? I'm free for once!",
+            "The vibes here are immaculate ✨",
+            "Just got a new keyboard, it's amazing.",
+            "What's your favorite coffee order?",
+            "I'm trying to read more books this year.",
+            "Anyone else into hiking?",
+            "This conversation is always fun.",
+            "I'm so ready for the next season of that show."
+        ];
+
+        const replyTemplates = [
+            "That's a great point, @{user}!",
+            "I totally agree with @{user} 💯",
+            "Interesting, @{user}. Tell me more.",
+            "Haha, classic @{user} moment.",
+            "Thanks for sharing, @{user}!",
+            "Well said, @{user}. I feel the same.",
+            "Wait, @{user} just read my mind.",
+            "Exactly what @{user} said!",
+            "Couldn't have said it better myself, @{user}.",
+            "Fascinating take, @{user}."
+        ];
+
+        function generateMessage(senderUser, channelId) {
+            const channelMessages = messagesByChannel[channelId] || [];
+            if (channelMessages.length > 0 && Math.random() < 0.45) {
+                const recent = [...channelMessages].reverse().slice(0, 12);
+                const eligible = recent.filter(m => m.userId !== senderUser.id && m.userName !== USER_NAME);
+                if (eligible.length > 0) {
+                    const targetMsg = randomItem(eligible);
+                    const replyPhrase = randomItem(replyTemplates);
+                    return replyPhrase.replace("{user}", targetMsg.userName);
+                }
+            }
+            let baseMsg = randomItem(genericMessages);
+            if (Math.random() < 0.3) {
+                const otherUsers = fakeUsers.filter(u => u.id !== senderUser.id);
+                if (otherUsers.length) {
+                    const randomOther = randomItem(otherUsers);
+                    baseMsg = `@${randomOther.name} ${baseMsg}`;
+                }
+            }
+            return baseMsg;
+        }
+
+        function addMessage(channelId, userId, userName, content, avatarColor, imageUrl = null, timestamp = null) {
+            if (!messagesByChannel[channelId]) messagesByChannel[channelId] = [];
+            const newMsg = {
+                id: nextMsgId++,
+                userId: userId,
+                userName: userName,
+                content: content || "",
+                timestamp: timestamp || getTimeStamp(),
+                avatarColor: avatarColor,
+                imageUrl: imageUrl
+            };
+            messagesByChannel[channelId].push(newMsg);
+            if (currentChannelId === channelId) {
+                renderMessagesForChannel(channelId);
+            }
+            return newMsg;
+        }
+
+        function renderMessagesForChannel(channelId) {
+            const container = document.getElementById("chatMessagesContainer");
+            if (!container) return;
+            const msgs = messagesByChannel[channelId] || [];
+            container.innerHTML = "";
+            msgs.forEach(msg => {
+                const messageRow = document.createElement("div");
+                messageRow.className = "message-row";
+
+                const avatarDiv = document.createElement("div");
+                avatarDiv.className = "message-avatar";
+                avatarDiv.style.background = msg.avatarColor;
+                avatarDiv.innerText = msg.userName.substring(0,2).toUpperCase();
+
+                const contentDiv = document.createElement("div");
+                contentDiv.className = "message-content";
+
+                const headerDiv = document.createElement("div");
+                headerDiv.className = "message-header";
+                const authorSpan = document.createElement("span");
+                authorSpan.className = "message-author";
+                authorSpan.innerText = msg.userName;
+
+                const timeSpan = document.createElement("span");
+                timeSpan.className = "timestamp";
+                timeSpan.innerText = msg.timestamp;
+
+                headerDiv.appendChild(authorSpan);
+                headerDiv.appendChild(timeSpan);
+                contentDiv.appendChild(headerDiv);
+
+                if (msg.content && msg.content.trim() !== "") {
+                    const textDiv = document.createElement("div");
+                    textDiv.className = "message-text";
+                    textDiv.innerText = msg.content;
+                    contentDiv.appendChild(textDiv);
+                }
+
+                if (msg.imageUrl) {
+                    const imageDiv = document.createElement("div");
+                    imageDiv.className = "message-image";
+                    const img = document.createElement("img");
+                    img.src = msg.imageUrl;
+                    img.alt = "image";
+                    img.loading = "lazy";
+                    imageDiv.appendChild(img);
+                    contentDiv.appendChild(imageDiv);
+                }
+
+                messageRow.appendChild(avatarDiv);
+                messageRow.appendChild(contentDiv);
+                container.appendChild(messageRow);
+            });
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function sendFakeMessage() {
+            if (!currentChannelId) return;
+            const randomUser = randomItem(fakeUsers);
+            const textMessage = generateMessage(randomUser, currentChannelId);
+            const willSendImage = Math.random() < 0.2;
+            const imageUrl = willSendImage ? getRandomImageUrl() : null;
+            addMessage(currentChannelId, randomUser.id, randomUser.name, textMessage, randomUser.avatarColor, imageUrl);
+        }
+
+        function sendReplyToUser(targetUserName, targetMessageContent, channelId) {
+            const randomUser = randomItem(fakeUsers);
+            let replyText = "";
+            const lowerMsg = targetMessageContent.toLowerCase();
+            if (lowerMsg.includes("hello") || lowerMsg.includes("hi") || lowerMsg.includes("hey")) {
+                replyText = `Hey @${targetUserName}! Good to see you around 👋`;
+            } else if (lowerMsg.includes("how") && lowerMsg.includes("you")) {
+                replyText = `Doing great, @${targetUserName}! Thanks for asking 😊`;
+            } else if (lowerMsg.includes("weekend") || lowerMsg.includes("plans")) {
+                replyText = `I'm probably just chilling, @${targetUserName}. What about you?`;
+            } else if (lowerMsg.includes("fun") || lowerMsg.includes("cool")) {
+                replyText = `Totally agree, @${targetUserName}. This place is awesome 🔥`;
+            } else if (lowerMsg.includes("game") || lowerMsg.includes("gaming")) {
+                replyText = `@${targetUserName} what games do you play? I'm looking for new ones!`;
+            } else if (lowerMsg.includes("music")) {
+                replyText = `@${targetUserName} any music recommendations? I need new playlists 🎵`;
+            } else {
+                const genericReplies = [
+                    `That's a solid thought, @${targetUserName}. Keep the conversation going!`,
+                    `I feel you, @${targetUserName}. Life's good.`,
+                    `Noted, @${targetUserName}. Always great chatting with you.`,
+                    `Thanks for the message, @${targetUserName}! 🙌`
+                ];
+                replyText = randomItem(genericReplies);
+            }
+            const willSendImage = Math.random() < 0.15;
+            const imageUrl = willSendImage ? getRandomImageUrl() : null;
+            addMessage(channelId, randomUser.id, randomUser.name, replyText, randomUser.avatarColor, imageUrl);
+        }
+
+        function handleUserTextMessage(text) {
+            if (!text.trim()) return;
+            addMessage(currentChannelId, "current_user", USER_NAME, text, USER_AVATAR_COLOR, null);
+            setTimeout(() => {
+                sendReplyToUser(USER_NAME, text, currentChannelId);
+            }, 1200);
+        }
+
+        function handleUserImage(file, optionalText = "") {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imageDataUrl = e.target.result;
+                addMessage(currentChannelId, "current_user", USER_NAME, optionalText, USER_AVATAR_COLOR, imageDataUrl);
+                setTimeout(() => {
+                    sendReplyToUser(USER_NAME, optionalText || "sent an image", currentChannelId);
+                }, 1500);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function handleSendButton() {
+            const input = document.getElementById("messageInput");
+            const text = input.value.trim();
+            if (text !== "") {
+                handleUserTextMessage(text);
+                input.value = "";
+            }
+        }
+
+        function setupImageUpload() {
+            const fileInput = document.getElementById("fileInput");
+            const messageInput = document.getElementById("messageInput");
+            fileInput.addEventListener("change", (e) => {
+                if (fileInput.files && fileInput.files[0]) {
+                    const file = fileInput.files[0];
+                    if (file.type.startsWith("image/")) {
+                        const currentText = messageInput.value.trim();
+                        handleUserImage(file, currentText);
+                        messageInput.value = "";
+                    } else {
+                        alert("Please select an image file (jpg, png, gif, etc.)");
+                    }
+                }
+                fileInput.value = "";
+            });
+        }
+
+        function initChannels() {
+            const channelsContainer = document.getElementById("channelsList");
+            channelsContainer.innerHTML = `<div class="channel-category">TEXT CHANNELS</div>`;
+            channels.forEach(ch => {
+                const chDiv = document.createElement("div");
+                chDiv.className = `channel-item ${ch.id === currentChannelId ? 'active' : ''}`;
+                chDiv.setAttribute("data-channel-id", ch.id);
+                chDiv.innerHTML = `<i class="fa-solid ${ch.icon}"></i> <span>${ch.name}</span>`;
+                chDiv.addEventListener("click", () => switchChannel(ch.id));
+                channelsContainer.appendChild(chDiv);
+            });
+        }
+
+        function switchChannel(channelId) {
+            if (currentChannelId === channelId) return;
+            currentChannelId = channelId;
+            document.querySelectorAll(".channel-item").forEach(item => {
+                const id = item.getAttribute("data-channel-id");
+                if (id === channelId) item.classList.add("active");
+                else item.classList.remove("active");
+            });
+            const channelObj = channels.find(c => c.id === channelId);
+            if (channelObj) {
+                document.getElementById("currentChannelName").innerText = channelObj.name;
+                const headerIcon = document.querySelector(".channel-info i");
+                if (headerIcon) headerIcon.className = `fa-solid ${channelObj.icon}`;
+                document.getElementById("messageInput").placeholder = `Message #${channelObj.name}`;
+            }
+            renderMessagesForChannel(channelId);
+        }
+
+        function renderMembers() {
+            const memberListDiv = document.getElementById("memberList");
+            memberListDiv.innerHTML = "";
+            fakeUsers.forEach(user => {
+                const memberDiv = document.createElement("div");
+                memberDiv.className = "member-item";
+                const avatarDiv = document.createElement("div");
+                avatarDiv.className = "member-avatar-small";
+                avatarDiv.style.background = user.avatarColor;
+                avatarDiv.innerText = user.name.substring(0,2).toUpperCase();
+                const infoDiv = document.createElement("div");
+                infoDiv.className = "member-info";
+                const nameSpan = document.createElement("div");
+                nameSpan.className = "member-name";
+                nameSpan.innerHTML = `<span class="status-dot"></span> ${user.name}`;
+                infoDiv.appendChild(nameSpan);
+                memberDiv.appendChild(avatarDiv);
+                memberDiv.appendChild(infoDiv);
+                memberListDiv.appendChild(memberDiv);
+            });
+        }
+
+        function updateUserInterface() {
+            const displayNameSpan = document.getElementById("displayUsername");
+            if (displayNameSpan) displayNameSpan.innerText = USER_NAME;
+            const userAvatar = document.getElementById("userAvatar");
+            if (userAvatar) userAvatar.innerText = USER_NAME.substring(0,2).toUpperCase();
+            const youMemberName = document.getElementById("youMemberName");
+            if (youMemberName) youMemberName.innerHTML = `<span class="status-dot"></span> ${USER_NAME}`;
+            const youAvatar = document.getElementById("youAvatar");
+            if (youAvatar) youAvatar.innerText = USER_NAME.substring(0,2).toUpperCase();
+        }
+
+        function changeUsername() {
+            const newName = prompt("Enter your new username:", USER_NAME);
+            if (newName && newName.trim() !== "") {
+                USER_NAME = newName.trim();
+                localStorage.setItem(STORAGE_KEY, USER_NAME);
+                updateUserInterface();
+            } else if (newName === "") {
+                alert("Username cannot be empty.");
+            }
+        }
+
+        function seedChannelMessages() {
+            channels.forEach(channel => {
+                const channelId = channel.id;
+                if (!messagesByChannel[channelId]) messagesByChannel[channelId] = [];
+                if (messagesByChannel[channelId].length === 0) {
+                    const numInitial = Math.floor(Math.random() * 4) + 3;
+                    for (let i = 0; i < numInitial; i++) {
+                        const randomUser = randomItem(fakeUsers);
+                        let content = "";
+                        if (channelId === "ch1") content = randomItem(["Welcome to the server! 🎉", "Happy to be here!", "Anyone around?", "This place looks cozy"]);
+                        else if (channelId === "ch2") content = randomItem(["What's everyone playing tonight?", "Anyone tried the new RPG?", "Valorant anyone?", "I love co-op games!"]);
+                        else if (channelId === "ch3") content = randomItem(["Share your favorite playlist!", "Listening to lo-fi right now", "Any jazz fans?", "New album dropped today"]);
+                        else if (channelId === "ch4") content = randomItem(["Latest GPU releases are insane", "Learning React, any tips?", "Cybersecurity is fascinating", "Just built my own PC"]);
+                        else if (channelId === "ch5") content = randomItem(["Digital art or traditional?", "Check out my latest sketch!", "Anyone into pixel art?", "Art block is real"]);
+                        else content = randomItem(genericMessages);
+                        
+                        if (Math.random() < 0.2) {
+                            addMessage(channelId, randomUser.id, randomUser.name, content, randomUser.avatarColor, getRandomImageUrl());
+                        } else {
+                            addMessage(channelId, randomUser.id, randomUser.name, content, randomUser.avatarColor, null);
+                        }
+                    }
+                    const greetUser = randomItem(fakeUsers);
+                    addMessage(channelId, greetUser.id, greetUser.name, `Hey everyone! Welcome to #${channel.name} ✨`, greetUser.avatarColor, null);
+                }
+            });
+        }
+
+        function startSimulation() {
+            if (simulationInterval) clearInterval(simulationInterval);
+            simulationInterval = setInterval(() => {
+                if (currentChannelId) {
+                    sendFakeMessage();
+                }
+            }, 6500);
+        }
+
+        function setupCloseButton() {
+            const closeBtn = document.getElementById("closeButton");
+            if (closeBtn) {
+                closeBtn.addEventListener("click", () => {
+                    window.location.href = "https://krisxxxllkrisipurvanov-cpu.github.io/Windows-Server-2026/";
+                });
+            }
+        }
+
+        // ---- LOADING ANIMATION ----
+        function startAppAfterLoading() {
+            const loadingOverlay = document.getElementById("loadingOverlay");
+            const discordApp = document.getElementById("discordApp");
+            
+            // Simulate network/loading delay (realistic Discord-like feel)
+            setTimeout(() => {
+                loadingOverlay.classList.add("hide");
+                discordApp.classList.add("visible");
+                // Remove overlay from DOM after transition to free resources
+                setTimeout(() => {
+                    loadingOverlay.style.display = "none";
+                }, 500);
+            }, 1800); // 1.8 sec loading animation
+        }
+
+        function init() {
+            renderMembers();
+            initChannels();
+            seedChannelMessages();
+            renderMessagesForChannel(currentChannelId);
+            startSimulation();
+            setupCloseButton();
+            setupImageUpload();
+            updateUserInterface();
+
+            // Event listeners
+            const sendBtn = document.getElementById("sendMsgBtn");
+            const messageInput = document.getElementById("messageInput");
+            sendBtn.addEventListener("click", handleSendButton);
+            messageInput.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") handleSendButton();
+            });
+            const imageLabel = document.querySelector(".image-upload-btn");
+            if (imageLabel) {
+                imageLabel.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    document.getElementById("fileInput").click();
+                });
+            }
+            const changeNameBtn = document.getElementById("changeNameBtn");
+            if (changeNameBtn) changeNameBtn.addEventListener("click", changeUsername);
+            const userPanel = document.getElementById("userPanel");
+            if (userPanel) userPanel.addEventListener("click", (e) => {
+                if (e.target === changeNameBtn || changeNameBtn.contains(e.target)) return;
+                changeUsername();
+            });
+            
+            // Start loading sequence (app hidden initially)
+            startAppAfterLoading();
+        }
+
+        // Delay initialization to show loader immediately
+        window.addEventListener("DOMContentLoaded", init);
+    </script>
+</body>
+</html>
