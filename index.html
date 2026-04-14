@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Discord · Community Chat</title>
-    <!-- Font Awesome 6 (free icons) -->
+    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
@@ -37,7 +37,6 @@
             justify-content: center;
             z-index: 9999;
             transition: opacity 0.4s ease-out, visibility 0.4s ease-out;
-            backdrop-filter: blur(0px);
         }
 
         .loading-content {
@@ -98,14 +97,8 @@
         }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes bounce {
@@ -113,13 +106,11 @@
             40% { transform: scale(1); opacity: 1; }
         }
 
-        /* hide loader after fade out */
         .loading-overlay.hide {
             opacity: 0;
             visibility: hidden;
         }
 
-        /* Main app (initially hidden until loader finishes) */
         .discord-app {
             display: flex;
             height: 100vh;
@@ -133,14 +124,12 @@
             opacity: 1;
         }
 
-        /* Sidebar channels */
         .channels-sidebar {
             width: 280px;
             background: #1e1f22;
             display: flex;
             flex-direction: column;
             border-right: 1px solid #2b2d31;
-            position: relative;
         }
 
         .server-header {
@@ -153,10 +142,6 @@
             gap: 8px;
             font-size: 16px;
             color: #dbdee1;
-        }
-
-        .server-header i {
-            color: #b5bac1;
         }
 
         .channels-list {
@@ -183,7 +168,6 @@
             color: #b5bac1;
             font-size: 15px;
             font-weight: 500;
-            transition: all 0.1s ease;
             cursor: pointer;
         }
 
@@ -197,12 +181,6 @@
             color: #ffffff;
         }
 
-        .channel-item i {
-            width: 24px;
-            font-size: 18px;
-        }
-
-        /* User panel bottom left */
         .user-panel {
             background: #1e1f22;
             border-top: 1px solid #2b2d31;
@@ -211,7 +189,6 @@
             align-items: center;
             gap: 12px;
             cursor: pointer;
-            transition: background 0.1s;
         }
 
         .user-panel:hover {
@@ -230,7 +207,6 @@
             font-size: 18px;
             color: white;
             text-transform: uppercase;
-            flex-shrink: 0;
         }
 
         .user-info {
@@ -262,7 +238,6 @@
             text-decoration: underline;
         }
 
-        /* Main chat */
         .chat-main {
             flex: 1;
             display: flex;
@@ -281,7 +256,6 @@
             padding: 0 16px;
             font-weight: 600;
             font-size: 16px;
-            gap: 8px;
         }
 
         .channel-info {
@@ -298,10 +272,7 @@
             cursor: pointer;
             padding: 6px 10px;
             border-radius: 8px;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            transition: 0.2s;
         }
 
         .close-button:hover {
@@ -312,7 +283,7 @@
         .chat-messages {
             flex: 1;
             overflow-y: auto;
-            padding: 20px 16px 20px 16px;
+            padding: 20px 16px;
             display: flex;
             flex-direction: column;
             gap: 16px;
@@ -360,14 +331,12 @@
         .timestamp {
             font-size: 11px;
             color: #a3a6aa;
-            font-weight: 400;
         }
 
         .message-text {
             font-size: 15px;
             line-height: 1.4;
             color: #dbdee1;
-            word-wrap: break-word;
             margin-top: 2px;
         }
 
@@ -378,19 +347,17 @@
             border-radius: 12px;
             overflow: hidden;
             cursor: pointer;
-            transition: 0.1s;
         }
 
         .message-image img {
             width: 100%;
             height: auto;
             display: block;
-            border-radius: 12px;
         }
 
         .chat-input-container {
             background: #2b2d31;
-            padding: 8px 16px 16px 16px;
+            padding: 8px 16px 16px;
         }
 
         .input-wrapper {
@@ -411,7 +378,6 @@
             color: #eef2ff;
             font-size: 15px;
             outline: none;
-            font-family: 'Inter', monospace;
         }
 
         .input-wrapper input::placeholder {
@@ -425,9 +391,6 @@
             font-size: 22px;
             cursor: pointer;
             padding: 6px 8px;
-            transition: 0.1s;
-            display: flex;
-            align-items: center;
         }
 
         .input-wrapper button:hover {
@@ -449,7 +412,6 @@
             display: none;
         }
 
-        /* Members sidebar */
         .members-sidebar {
             width: 260px;
             background: #1e1f22;
@@ -464,7 +426,6 @@
             font-size: 12px;
             font-weight: 600;
             color: #949ba4;
-            letter-spacing: 0.5px;
         }
 
         .member-list {
@@ -477,7 +438,6 @@
             gap: 12px;
             padding: 6px 8px;
             border-radius: 8px;
-            margin: 2px 0;
         }
 
         .member-avatar-small {
@@ -490,10 +450,6 @@
             font-weight: bold;
             font-size: 12px;
             color: white;
-        }
-
-        .member-info {
-            flex: 1;
         }
 
         .member-name {
@@ -514,94 +470,53 @@
         ::-webkit-scrollbar {
             width: 8px;
         }
-
-        ::-webkit-scrollbar-track {
-            background: #1e1f22;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #3b3d44;
-            border-radius: 8px;
-        }
+        ::-webkit-scrollbar-track { background: #1e1f22; }
+        ::-webkit-scrollbar-thumb { background: #3b3d44; border-radius: 8px; }
     </style>
 </head>
 <body>
-    <!-- LOADING OVERLAY (Discord style) -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-content">
-            <div class="discord-logo-loading">
-                <i class="fa-brands fa-discord"></i>
-            </div>
+            <div class="discord-logo-loading"><i class="fa-brands fa-discord"></i></div>
             <div class="loading-spinner"></div>
-            <div class="loading-text">
-                Connecting to chat
-                <div class="loading-dots">
-                    <span>.</span><span>.</span><span>.</span>
-                </div>
-            </div>
+            <div class="loading-text">Connecting to chat<div class="loading-dots"><span>.</span><span>.</span><span>.</span></div></div>
         </div>
     </div>
-
-    <!-- MAIN APP (initially hidden) -->
     <div class="discord-app" id="discordApp">
-        <!-- CHANNELS SIDEBAR -->
         <div class="channels-sidebar">
-            <div class="server-header">
-                <i class="fa-brands fa-discord"></i> Discord
-            </div>
-            <div class="channels-list" id="channelsList">
-                <div class="channel-category">TEXT CHANNELS</div>
-            </div>
-            <!-- Bottom user panel with pfp and change name -->
+            <div class="server-header"><i class="fa-brands fa-discord"></i> Discord</div>
+            <div class="channels-list" id="channelsList"><div class="channel-category">TEXT CHANNELS</div></div>
             <div class="user-panel" id="userPanel">
                 <div class="user-avatar" id="userAvatar">U</div>
                 <div class="user-info">
                     <div class="user-name" id="displayUsername">User12312412312</div>
-                    <div class="change-name-btn" id="changeNameBtn">
-                        <i class="fa-regular fa-pen-to-square"></i> Change name
-                    </div>
+                    <div class="change-name-btn" id="changeNameBtn"><i class="fa-regular fa-pen-to-square"></i> Change name</div>
                 </div>
             </div>
         </div>
-
-        <!-- MAIN CHAT AREA -->
         <div class="chat-main">
             <div class="chat-header">
-                <div class="channel-info">
-                    <i class="fa-solid fa-hashtag"></i> <span id="currentChannelName">general</span>
-                </div>
-                <button class="close-button" id="closeButton" title="Leave server">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+                <div class="channel-info"><i class="fa-solid fa-hashtag"></i> <span id="currentChannelName">general</span></div>
+                <button class="close-button" id="closeButton"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="chat-messages" id="chatMessagesContainer"></div>
             <div class="chat-input-container">
                 <div class="input-wrapper">
                     <input type="text" id="messageInput" placeholder="Message #general" autocomplete="off">
-                    <label for="fileInput" class="image-upload-btn" title="Send an image">
-                        <i class="fa-regular fa-image"></i>
-                    </label>
+                    <label for="fileInput" class="image-upload-btn"><i class="fa-regular fa-image"></i></label>
                     <input type="file" id="fileInput" accept="image/*">
                     <button id="sendMsgBtn"><i class="fa-regular fa-paper-plane"></i></button>
                 </div>
             </div>
         </div>
-
-        <!-- MEMBERS SIDEBAR -->
         <div class="members-sidebar">
-            <div class="members-header">
-                <i class="fa-regular fa-user"></i> MEMBERS — 8 online
-            </div>
+            <div class="members-header"><i class="fa-regular fa-user"></i> MEMBERS — 8 online</div>
             <div class="member-list" id="memberList"></div>
-            <div class="members-header" style="margin-top: 12px;">
-                <i class="fa-regular fa-circle-check"></i> YOU
-            </div>
+            <div class="members-header"><i class="fa-regular fa-circle-check"></i> YOU</div>
             <div class="member-list">
-                <div class="member-item" id="youMemberItem">
-                    <div class="member-avatar-small" style="background: #5865f2;" id="youAvatar">U</div>
-                    <div class="member-info">
-                        <div class="member-name" id="youMemberName"><span class="status-dot"></span> User12312412312</div>
-                    </div>
+                <div class="member-item">
+                    <div class="member-avatar-small" style="background:#5865f2" id="youAvatar">U</div>
+                    <div class="member-info"><div class="member-name" id="youMemberName"><span class="status-dot"></span> User12312412312</div></div>
                 </div>
             </div>
         </div>
@@ -613,16 +528,16 @@
         let USER_NAME = localStorage.getItem(STORAGE_KEY) || "User12312412312";
         const USER_AVATAR_COLOR = "#5865f2";
 
-        // ---------- FAKE USERS (regular people, no AI labels) ----------
+        // ---------- FAKE USERS (regular people) ----------
         const fakeUsers = [
-            { id: "u1", name: "AlexMorgan", avatarColor: "#9b59b6", status: "online" },
-            { id: "u2", name: "JadeWinters", avatarColor: "#3498db", status: "online" },
-            { id: "u3", name: "MarcusV", avatarColor: "#e67e22", status: "online" },
-            { id: "u4", name: "SamCortex", avatarColor: "#2ecc71", status: "online" },
-            { id: "u5", name: "LunaRae", avatarColor: "#f1c40f", status: "online" },
-            { id: "u6", name: "DexterK", avatarColor: "#e74c3c", status: "online" },
-            { id: "u7", name: "NinaSky", avatarColor: "#1abc9c", status: "online" },
-            { id: "u8", name: "RileyChen", avatarColor: "#34495e", status: "online" }
+            { id: "u1", name: "AlexMorgan", avatarColor: "#9b59b6" },
+            { id: "u2", name: "JadeWinters", avatarColor: "#3498db" },
+            { id: "u3", name: "MarcusV", avatarColor: "#e67e22" },
+            { id: "u4", name: "SamCortex", avatarColor: "#2ecc71" },
+            { id: "u5", name: "LunaRae", avatarColor: "#f1c40f" },
+            { id: "u6", name: "DexterK", avatarColor: "#e74c3c" },
+            { id: "u7", name: "NinaSky", avatarColor: "#1abc9c" },
+            { id: "u8", name: "RileyChen", avatarColor: "#34495e" }
         ];
 
         // ---------- CHANNELS ----------
@@ -634,111 +549,65 @@
             { id: "ch5", name: "art", icon: "fa-palette" }
         ];
 
-        // Message storage per channel
         let messagesByChannel = {};
         let currentChannelId = "ch1";
         let nextMsgId = 0;
         let simulationInterval = null;
 
-        // Image URLs for fake users
-        const fakeImageUrls = [
-            "https://picsum.photos/id/10/400/300",
-            "https://picsum.photos/id/15/400/300",
-            "https://picsum.photos/id/26/400/300",
-            "https://picsum.photos/id/29/400/300",
-            "https://picsum.photos/id/96/400/300",
-            "https://picsum.photos/id/155/400/300",
-            "https://picsum.photos/id/169/400/300",
-            "https://picsum.photos/id/20/400/300",
-            "https://picsum.photos/id/42/400/300",
-            "https://picsum.photos/id/91/400/300"
+        // ---------- SWEAR DETECTION ----------
+        const swearWords = ["fuck", "shit", "damn", "bitch", "crap", "ass", "hell", "bastard", "dick", "piss", "cunt", "whore", "slut", "faggot", "retard", "nigger", "asshole", "motherfucker"];
+        function containsSwear(text) {
+            const lower = text.toLowerCase();
+            return swearWords.some(swear => lower.includes(swear));
+        }
+
+        // Swear reaction messages (randomly chosen)
+        const swearReactions = [
+            "WOAH, watch your language! 😳",
+            "CLIPED 🎬",
+            "WHY ARE YOU SWEARING? 🤨",
+            "That's not very nice... 😬",
+            "LANGUAGE! Please keep it clean.",
+            "Someone's angry 😅",
+            "Whoa there, take a breath.",
+            "Reported? Just kidding... but chill.",
+            "My virtual ears are bleeding 💀",
+            "Okay, calm down buddy."
         ];
 
-        function getRandomImageUrl() {
-            return fakeImageUrls[Math.floor(Math.random() * fakeImageUrls.length)];
-        }
-
-        function getTimeStamp() {
-            const now = new Date();
-            const hours = now.getHours().toString().padStart(2,'0');
-            const minutes = now.getMinutes().toString().padStart(2,'0');
-            return `Today at ${hours}:${minutes}`;
-        }
-
-        function randomItem(arr) {
-            return arr[Math.floor(Math.random() * arr.length)];
-        }
-
-        // ---------- MESSAGE GENERATION ----------
+        // Normal generic messages
         const genericMessages = [
-            "Hey everyone! What's up? 👋",
-            "Just finished work, finally some free time.",
-            "Has anyone seen the new movie that just dropped?",
-            "I'm thinking about ordering pizza tonight 🍕",
-            "This server is so chill, I love it.",
-            "Does anyone have game recommendations?",
-            "Learning guitar is harder than I thought 😅",
-            "Weekend plans? I'm free for once!",
-            "The vibes here are immaculate ✨",
-            "Just got a new keyboard, it's amazing.",
-            "What's your favorite coffee order?",
-            "I'm trying to read more books this year.",
-            "Anyone else into hiking?",
-            "This conversation is always fun.",
-            "I'm so ready for the next season of that show."
+            "Hey everyone! What's up? 👋", "Just finished work, finally some free time.",
+            "Has anyone seen the new movie?", "I'm thinking about pizza tonight 🍕",
+            "This server is so chill.", "Any game recommendations?",
+            "Weekend plans? I'm free!", "The vibes here are immaculate ✨",
+            "Just got a new keyboard, it's amazing.", "What's your favorite coffee order?",
+            "I'm trying to read more books.", "Anyone else into hiking?"
         ];
-
         const replyTemplates = [
-            "That's a great point, @{user}!",
-            "I totally agree with @{user} 💯",
-            "Interesting, @{user}. Tell me more.",
-            "Haha, classic @{user} moment.",
-            "Thanks for sharing, @{user}!",
-            "Well said, @{user}. I feel the same.",
-            "Wait, @{user} just read my mind.",
-            "Exactly what @{user} said!",
-            "Couldn't have said it better myself, @{user}.",
-            "Fascinating take, @{user}."
+            "That's a great point, @{user}!", "I totally agree with @{user} 💯",
+            "Interesting, @{user}. Tell me more.", "Haha, classic @{user} moment.",
+            "Thanks for sharing, @{user}!", "Well said, @{user}. I feel the same.",
+            "Wait, @{user} just read my mind.", "Exactly what @{user} said!"
         ];
 
-        function generateMessage(senderUser, channelId) {
-            const channelMessages = messagesByChannel[channelId] || [];
-            if (channelMessages.length > 0 && Math.random() < 0.45) {
-                const recent = [...channelMessages].reverse().slice(0, 12);
-                const eligible = recent.filter(m => m.userId !== senderUser.id && m.userName !== USER_NAME);
-                if (eligible.length > 0) {
-                    const targetMsg = randomItem(eligible);
-                    const replyPhrase = randomItem(replyTemplates);
-                    return replyPhrase.replace("{user}", targetMsg.userName);
-                }
-            }
-            let baseMsg = randomItem(genericMessages);
-            if (Math.random() < 0.3) {
-                const otherUsers = fakeUsers.filter(u => u.id !== senderUser.id);
-                if (otherUsers.length) {
-                    const randomOther = randomItem(otherUsers);
-                    baseMsg = `@${randomOther.name} ${baseMsg}`;
-                }
-            }
-            return baseMsg;
-        }
+        const fakeImageUrls = [
+            "https://picsum.photos/id/10/400/300", "https://picsum.photos/id/15/400/300",
+            "https://picsum.photos/id/26/400/300", "https://picsum.photos/id/29/400/300",
+            "https://picsum.photos/id/96/400/300", "https://picsum.photos/id/155/400/300",
+            "https://picsum.photos/id/169/400/300", "https://picsum.photos/id/20/400/300"
+        ];
 
-        function addMessage(channelId, userId, userName, content, avatarColor, imageUrl = null, timestamp = null) {
+        function getRandomImageUrl() { return fakeImageUrls[Math.floor(Math.random() * fakeImageUrls.length)]; }
+        function getTimeStamp() { const d = new Date(); return `Today at ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`; }
+        function randomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+        function addMessage(channelId, userId, userName, content, avatarColor, imageUrl = null) {
             if (!messagesByChannel[channelId]) messagesByChannel[channelId] = [];
-            const newMsg = {
-                id: nextMsgId++,
-                userId: userId,
-                userName: userName,
-                content: content || "",
-                timestamp: timestamp || getTimeStamp(),
-                avatarColor: avatarColor,
-                imageUrl: imageUrl
-            };
-            messagesByChannel[channelId].push(newMsg);
-            if (currentChannelId === channelId) {
-                renderMessagesForChannel(channelId);
-            }
-            return newMsg;
+            const msg = { id: nextMsgId++, userId, userName, content: content || "", timestamp: getTimeStamp(), avatarColor, imageUrl };
+            messagesByChannel[channelId].push(msg);
+            if (currentChannelId === channelId) renderMessagesForChannel(channelId);
+            return msg;
         }
 
         function renderMessagesForChannel(channelId) {
@@ -747,277 +616,190 @@
             const msgs = messagesByChannel[channelId] || [];
             container.innerHTML = "";
             msgs.forEach(msg => {
-                const messageRow = document.createElement("div");
-                messageRow.className = "message-row";
-
-                const avatarDiv = document.createElement("div");
-                avatarDiv.className = "message-avatar";
-                avatarDiv.style.background = msg.avatarColor;
-                avatarDiv.innerText = msg.userName.substring(0,2).toUpperCase();
-
-                const contentDiv = document.createElement("div");
-                contentDiv.className = "message-content";
-
-                const headerDiv = document.createElement("div");
-                headerDiv.className = "message-header";
-                const authorSpan = document.createElement("span");
-                authorSpan.className = "message-author";
-                authorSpan.innerText = msg.userName;
-
-                const timeSpan = document.createElement("span");
-                timeSpan.className = "timestamp";
-                timeSpan.innerText = msg.timestamp;
-
-                headerDiv.appendChild(authorSpan);
-                headerDiv.appendChild(timeSpan);
-                contentDiv.appendChild(headerDiv);
-
-                if (msg.content && msg.content.trim() !== "") {
-                    const textDiv = document.createElement("div");
-                    textDiv.className = "message-text";
-                    textDiv.innerText = msg.content;
-                    contentDiv.appendChild(textDiv);
-                }
-
-                if (msg.imageUrl) {
-                    const imageDiv = document.createElement("div");
-                    imageDiv.className = "message-image";
-                    const img = document.createElement("img");
-                    img.src = msg.imageUrl;
-                    img.alt = "image";
-                    img.loading = "lazy";
-                    imageDiv.appendChild(img);
-                    contentDiv.appendChild(imageDiv);
-                }
-
-                messageRow.appendChild(avatarDiv);
-                messageRow.appendChild(contentDiv);
-                container.appendChild(messageRow);
+                const row = document.createElement("div"); row.className = "message-row";
+                const avatar = document.createElement("div"); avatar.className = "message-avatar"; avatar.style.background = msg.avatarColor;
+                avatar.innerText = msg.userName.substring(0,2).toUpperCase();
+                const contentDiv = document.createElement("div"); contentDiv.className = "message-content";
+                const header = document.createElement("div"); header.className = "message-header";
+                const author = document.createElement("span"); author.className = "message-author"; author.innerText = msg.userName;
+                const time = document.createElement("span"); time.className = "timestamp"; time.innerText = msg.timestamp;
+                header.appendChild(author); header.appendChild(time);
+                contentDiv.appendChild(header);
+                if (msg.content) { const textDiv = document.createElement("div"); textDiv.className = "message-text"; textDiv.innerText = msg.content; contentDiv.appendChild(textDiv); }
+                if (msg.imageUrl) { const imgDiv = document.createElement("div"); imgDiv.className = "message-image"; const img = document.createElement("img"); img.src = msg.imageUrl; imgDiv.appendChild(img); contentDiv.appendChild(imgDiv); }
+                row.appendChild(avatar); row.appendChild(contentDiv);
+                container.appendChild(row);
             });
             container.scrollTop = container.scrollHeight;
         }
 
-        function sendFakeMessage() {
-            if (!currentChannelId) return;
-            const randomUser = randomItem(fakeUsers);
-            const textMessage = generateMessage(randomUser, currentChannelId);
-            const willSendImage = Math.random() < 0.2;
-            const imageUrl = willSendImage ? getRandomImageUrl() : null;
-            addMessage(currentChannelId, randomUser.id, randomUser.name, textMessage, randomUser.avatarColor, imageUrl);
+        // Generate fake message text (normal)
+        function generateNormalMessage(senderUser, channelId) {
+            const channelMsgs = messagesByChannel[channelId] || [];
+            if (channelMsgs.length > 0 && Math.random() < 0.45) {
+                const recent = [...channelMsgs].reverse().slice(0, 12);
+                const eligible = recent.filter(m => m.userId !== senderUser.id && m.userName !== USER_NAME);
+                if (eligible.length) {
+                    const target = randomItem(eligible);
+                    return randomItem(replyTemplates).replace("{user}", target.userName);
+                }
+            }
+            let msg = randomItem(genericMessages);
+            if (Math.random() < 0.3) {
+                const others = fakeUsers.filter(u => u.id !== senderUser.id);
+                if (others.length) msg = `@${randomItem(others).name} ${msg}`;
+            }
+            return msg;
         }
 
+        function sendFakeMessage() {
+            if (!currentChannelId) return;
+            const user = randomItem(fakeUsers);
+            const text = generateNormalMessage(user, currentChannelId);
+            const hasImage = Math.random() < 0.2;
+            addMessage(currentChannelId, user.id, user.name, text, user.avatarColor, hasImage ? getRandomImageUrl() : null);
+        }
+
+        // REPLY WITH SWEAR DETECTION
         function sendReplyToUser(targetUserName, targetMessageContent, channelId) {
             const randomUser = randomItem(fakeUsers);
             let replyText = "";
-            const lowerMsg = targetMessageContent.toLowerCase();
-            if (lowerMsg.includes("hello") || lowerMsg.includes("hi") || lowerMsg.includes("hey")) {
-                replyText = `Hey @${targetUserName}! Good to see you around 👋`;
-            } else if (lowerMsg.includes("how") && lowerMsg.includes("you")) {
-                replyText = `Doing great, @${targetUserName}! Thanks for asking 😊`;
-            } else if (lowerMsg.includes("weekend") || lowerMsg.includes("plans")) {
-                replyText = `I'm probably just chilling, @${targetUserName}. What about you?`;
-            } else if (lowerMsg.includes("fun") || lowerMsg.includes("cool")) {
-                replyText = `Totally agree, @${targetUserName}. This place is awesome 🔥`;
-            } else if (lowerMsg.includes("game") || lowerMsg.includes("gaming")) {
-                replyText = `@${targetUserName} what games do you play? I'm looking for new ones!`;
-            } else if (lowerMsg.includes("music")) {
-                replyText = `@${targetUserName} any music recommendations? I need new playlists 🎵`;
+            // Check if target message contains swear words
+            if (containsSwear(targetMessageContent)) {
+                replyText = randomItem(swearReactions);
+                // Add a little extra: sometimes mention the user
+                if (Math.random() < 0.5) replyText = `@${targetUserName} ${replyText.toLowerCase()}`;
             } else {
-                const genericReplies = [
-                    `That's a solid thought, @${targetUserName}. Keep the conversation going!`,
-                    `I feel you, @${targetUserName}. Life's good.`,
-                    `Noted, @${targetUserName}. Always great chatting with you.`,
-                    `Thanks for the message, @${targetUserName}! 🙌`
-                ];
-                replyText = randomItem(genericReplies);
+                // Normal contextual reply
+                const lower = targetMessageContent.toLowerCase();
+                if (lower.includes("hello") || lower.includes("hi")) replyText = `Hey @${targetUserName}! 👋`;
+                else if (lower.includes("how") && lower.includes("you")) replyText = `Doing great, @${targetUserName}! 😊`;
+                else if (lower.includes("weekend")) replyText = `Chilling, @${targetUserName}. You?`;
+                else if (lower.includes("game")) replyText = `@${targetUserName} what games do you play?`;
+                else if (lower.includes("music")) replyText = `@${targetUserName} any music recommendations? 🎵`;
+                else replyText = randomItem(replyTemplates).replace("{user}", targetUserName);
             }
-            const willSendImage = Math.random() < 0.15;
-            const imageUrl = willSendImage ? getRandomImageUrl() : null;
-            addMessage(channelId, randomUser.id, randomUser.name, replyText, randomUser.avatarColor, imageUrl);
+            const hasImage = Math.random() < 0.1;
+            addMessage(channelId, randomUser.id, randomUser.name, replyText, randomUser.avatarColor, hasImage ? getRandomImageUrl() : null);
         }
 
+        // User handlers
         function handleUserTextMessage(text) {
             if (!text.trim()) return;
             addMessage(currentChannelId, "current_user", USER_NAME, text, USER_AVATAR_COLOR, null);
-            setTimeout(() => {
-                sendReplyToUser(USER_NAME, text, currentChannelId);
-            }, 1200);
+            setTimeout(() => sendReplyToUser(USER_NAME, text, currentChannelId), 1200);
         }
-
         function handleUserImage(file, optionalText = "") {
             const reader = new FileReader();
-            reader.onload = function(e) {
-                const imageDataUrl = e.target.result;
-                addMessage(currentChannelId, "current_user", USER_NAME, optionalText, USER_AVATAR_COLOR, imageDataUrl);
-                setTimeout(() => {
-                    sendReplyToUser(USER_NAME, optionalText || "sent an image", currentChannelId);
-                }, 1500);
+            reader.onload = (e) => {
+                addMessage(currentChannelId, "current_user", USER_NAME, optionalText, USER_AVATAR_COLOR, e.target.result);
+                setTimeout(() => sendReplyToUser(USER_NAME, optionalText || "sent an image", currentChannelId), 1500);
             };
             reader.readAsDataURL(file);
         }
-
         function handleSendButton() {
             const input = document.getElementById("messageInput");
             const text = input.value.trim();
-            if (text !== "") {
-                handleUserTextMessage(text);
-                input.value = "";
-            }
+            if (text) { handleUserTextMessage(text); input.value = ""; }
         }
 
-        function setupImageUpload() {
-            const fileInput = document.getElementById("fileInput");
-            const messageInput = document.getElementById("messageInput");
-            fileInput.addEventListener("change", (e) => {
-                if (fileInput.files && fileInput.files[0]) {
-                    const file = fileInput.files[0];
-                    if (file.type.startsWith("image/")) {
-                        const currentText = messageInput.value.trim();
-                        handleUserImage(file, currentText);
-                        messageInput.value = "";
-                    } else {
-                        alert("Please select an image file (jpg, png, gif, etc.)");
-                    }
-                }
-                fileInput.value = "";
-            });
-        }
-
+        // Channel UI
         function initChannels() {
-            const channelsContainer = document.getElementById("channelsList");
-            channelsContainer.innerHTML = `<div class="channel-category">TEXT CHANNELS</div>`;
+            const container = document.getElementById("channelsList");
+            container.innerHTML = `<div class="channel-category">TEXT CHANNELS</div>`;
             channels.forEach(ch => {
-                const chDiv = document.createElement("div");
-                chDiv.className = `channel-item ${ch.id === currentChannelId ? 'active' : ''}`;
-                chDiv.setAttribute("data-channel-id", ch.id);
-                chDiv.innerHTML = `<i class="fa-solid ${ch.icon}"></i> <span>${ch.name}</span>`;
-                chDiv.addEventListener("click", () => switchChannel(ch.id));
-                channelsContainer.appendChild(chDiv);
+                const div = document.createElement("div");
+                div.className = `channel-item ${ch.id === currentChannelId ? 'active' : ''}`;
+                div.setAttribute("data-channel-id", ch.id);
+                div.innerHTML = `<i class="fa-solid ${ch.icon}"></i> <span>${ch.name}</span>`;
+                div.addEventListener("click", () => switchChannel(ch.id));
+                container.appendChild(div);
             });
         }
-
         function switchChannel(channelId) {
             if (currentChannelId === channelId) return;
             currentChannelId = channelId;
-            document.querySelectorAll(".channel-item").forEach(item => {
-                const id = item.getAttribute("data-channel-id");
-                if (id === channelId) item.classList.add("active");
-                else item.classList.remove("active");
+            document.querySelectorAll(".channel-item").forEach(el => {
+                if (el.getAttribute("data-channel-id") === channelId) el.classList.add("active");
+                else el.classList.remove("active");
             });
-            const channelObj = channels.find(c => c.id === channelId);
-            if (channelObj) {
-                document.getElementById("currentChannelName").innerText = channelObj.name;
-                const headerIcon = document.querySelector(".channel-info i");
-                if (headerIcon) headerIcon.className = `fa-solid ${channelObj.icon}`;
-                document.getElementById("messageInput").placeholder = `Message #${channelObj.name}`;
+            const ch = channels.find(c => c.id === channelId);
+            if (ch) {
+                document.getElementById("currentChannelName").innerText = ch.name;
+                document.querySelector(".channel-info i").className = `fa-solid ${ch.icon}`;
+                document.getElementById("messageInput").placeholder = `Message #${ch.name}`;
             }
             renderMessagesForChannel(channelId);
         }
 
         function renderMembers() {
-            const memberListDiv = document.getElementById("memberList");
-            memberListDiv.innerHTML = "";
-            fakeUsers.forEach(user => {
-                const memberDiv = document.createElement("div");
-                memberDiv.className = "member-item";
-                const avatarDiv = document.createElement("div");
-                avatarDiv.className = "member-avatar-small";
-                avatarDiv.style.background = user.avatarColor;
-                avatarDiv.innerText = user.name.substring(0,2).toUpperCase();
-                const infoDiv = document.createElement("div");
-                infoDiv.className = "member-info";
-                const nameSpan = document.createElement("div");
-                nameSpan.className = "member-name";
-                nameSpan.innerHTML = `<span class="status-dot"></span> ${user.name}`;
-                infoDiv.appendChild(nameSpan);
-                memberDiv.appendChild(avatarDiv);
-                memberDiv.appendChild(infoDiv);
-                memberListDiv.appendChild(memberDiv);
+            const list = document.getElementById("memberList");
+            list.innerHTML = "";
+            fakeUsers.forEach(u => {
+                const div = document.createElement("div"); div.className = "member-item";
+                const avatar = document.createElement("div"); avatar.className = "member-avatar-small"; avatar.style.background = u.avatarColor;
+                avatar.innerText = u.name.substring(0,2).toUpperCase();
+                const info = document.createElement("div"); info.className = "member-info";
+                const nameSpan = document.createElement("div"); nameSpan.className = "member-name";
+                nameSpan.innerHTML = `<span class="status-dot"></span> ${u.name}`;
+                info.appendChild(nameSpan);
+                div.appendChild(avatar); div.appendChild(info);
+                list.appendChild(div);
             });
         }
 
         function updateUserInterface() {
-            const displayNameSpan = document.getElementById("displayUsername");
-            if (displayNameSpan) displayNameSpan.innerText = USER_NAME;
-            const userAvatar = document.getElementById("userAvatar");
-            if (userAvatar) userAvatar.innerText = USER_NAME.substring(0,2).toUpperCase();
-            const youMemberName = document.getElementById("youMemberName");
-            if (youMemberName) youMemberName.innerHTML = `<span class="status-dot"></span> ${USER_NAME}`;
-            const youAvatar = document.getElementById("youAvatar");
-            if (youAvatar) youAvatar.innerText = USER_NAME.substring(0,2).toUpperCase();
+            document.getElementById("displayUsername").innerText = USER_NAME;
+            document.getElementById("userAvatar").innerText = USER_NAME.substring(0,2).toUpperCase();
+            document.getElementById("youMemberName").innerHTML = `<span class="status-dot"></span> ${USER_NAME}`;
+            document.getElementById("youAvatar").innerText = USER_NAME.substring(0,2).toUpperCase();
         }
-
         function changeUsername() {
-            const newName = prompt("Enter your new username:", USER_NAME);
-            if (newName && newName.trim() !== "") {
-                USER_NAME = newName.trim();
-                localStorage.setItem(STORAGE_KEY, USER_NAME);
-                updateUserInterface();
-            } else if (newName === "") {
-                alert("Username cannot be empty.");
-            }
+            const newName = prompt("Enter new username:", USER_NAME);
+            if (newName && newName.trim()) { USER_NAME = newName.trim(); localStorage.setItem(STORAGE_KEY, USER_NAME); updateUserInterface(); }
+            else if (newName === "") alert("Username cannot be empty.");
         }
 
         function seedChannelMessages() {
-            channels.forEach(channel => {
-                const channelId = channel.id;
-                if (!messagesByChannel[channelId]) messagesByChannel[channelId] = [];
-                if (messagesByChannel[channelId].length === 0) {
-                    const numInitial = Math.floor(Math.random() * 4) + 3;
-                    for (let i = 0; i < numInitial; i++) {
-                        const randomUser = randomItem(fakeUsers);
+            channels.forEach(ch => {
+                const cid = ch.id;
+                if (!messagesByChannel[cid]) messagesByChannel[cid] = [];
+                if (messagesByChannel[cid].length === 0) {
+                    const num = Math.floor(Math.random() * 4) + 3;
+                    for (let i = 0; i < num; i++) {
+                        const u = randomItem(fakeUsers);
                         let content = "";
-                        if (channelId === "ch1") content = randomItem(["Welcome to the server! 🎉", "Happy to be here!", "Anyone around?", "This place looks cozy"]);
-                        else if (channelId === "ch2") content = randomItem(["What's everyone playing tonight?", "Anyone tried the new RPG?", "Valorant anyone?", "I love co-op games!"]);
-                        else if (channelId === "ch3") content = randomItem(["Share your favorite playlist!", "Listening to lo-fi right now", "Any jazz fans?", "New album dropped today"]);
-                        else if (channelId === "ch4") content = randomItem(["Latest GPU releases are insane", "Learning React, any tips?", "Cybersecurity is fascinating", "Just built my own PC"]);
-                        else if (channelId === "ch5") content = randomItem(["Digital art or traditional?", "Check out my latest sketch!", "Anyone into pixel art?", "Art block is real"]);
-                        else content = randomItem(genericMessages);
-                        
-                        if (Math.random() < 0.2) {
-                            addMessage(channelId, randomUser.id, randomUser.name, content, randomUser.avatarColor, getRandomImageUrl());
-                        } else {
-                            addMessage(channelId, randomUser.id, randomUser.name, content, randomUser.avatarColor, null);
-                        }
+                        if (cid === "ch1") content = randomItem(["Welcome! 🎉", "Happy to be here!"]);
+                        else if (cid === "ch2") content = randomItem(["Anyone playing?", "New RPG?"]);
+                        else if (cid === "ch3") content = randomItem(["Share playlists!", "Lo-fi vibes"]);
+                        else if (cid === "ch4") content = randomItem(["Latest GPU?", "Learning React"]);
+                        else content = randomItem(["Art block is real", "Check my sketch!"]);
+                        const hasImg = Math.random() < 0.2;
+                        addMessage(cid, u.id, u.name, content, u.avatarColor, hasImg ? getRandomImageUrl() : null);
                     }
-                    const greetUser = randomItem(fakeUsers);
-                    addMessage(channelId, greetUser.id, greetUser.name, `Hey everyone! Welcome to #${channel.name} ✨`, greetUser.avatarColor, null);
+                    const greet = randomItem(fakeUsers);
+                    addMessage(cid, greet.id, greet.name, `Hey everyone! Welcome to #${ch.name} ✨`, greet.avatarColor, null);
                 }
             });
         }
 
         function startSimulation() {
             if (simulationInterval) clearInterval(simulationInterval);
-            simulationInterval = setInterval(() => {
-                if (currentChannelId) {
-                    sendFakeMessage();
-                }
-            }, 6500);
+            simulationInterval = setInterval(() => { if (currentChannelId) sendFakeMessage(); }, 6500);
         }
 
         function setupCloseButton() {
-            const closeBtn = document.getElementById("closeButton");
-            if (closeBtn) {
-                closeBtn.addEventListener("click", () => {
-                    window.location.href = "https://krisxxxllkrisipurvanov-cpu.github.io/Windows-Server-2026/";
-                });
-            }
+            document.getElementById("closeButton").addEventListener("click", () => {
+                window.location.href = "https://krisxxxllkrisipurvanov-cpu.github.io/Windows-Server-2026/";
+            });
         }
 
-        // ---- LOADING ANIMATION ----
         function startAppAfterLoading() {
-            const loadingOverlay = document.getElementById("loadingOverlay");
-            const discordApp = document.getElementById("discordApp");
-            
-            // Simulate network/loading delay (realistic Discord-like feel)
             setTimeout(() => {
-                loadingOverlay.classList.add("hide");
-                discordApp.classList.add("visible");
-                // Remove overlay from DOM after transition to free resources
-                setTimeout(() => {
-                    loadingOverlay.style.display = "none";
-                }, 500);
-            }, 1800); // 1.8 sec loading animation
+                document.getElementById("loadingOverlay").classList.add("hide");
+                document.getElementById("discordApp").classList.add("visible");
+                setTimeout(() => { document.getElementById("loadingOverlay").style.display = "none"; }, 500);
+            }, 1800);
         }
 
         function init() {
@@ -1027,37 +809,30 @@
             renderMessagesForChannel(currentChannelId);
             startSimulation();
             setupCloseButton();
-            setupImageUpload();
             updateUserInterface();
 
-            // Event listeners
-            const sendBtn = document.getElementById("sendMsgBtn");
-            const messageInput = document.getElementById("messageInput");
-            sendBtn.addEventListener("click", handleSendButton);
-            messageInput.addEventListener("keypress", (e) => {
-                if (e.key === "Enter") handleSendButton();
+            document.getElementById("sendMsgBtn").addEventListener("click", handleSendButton);
+            document.getElementById("messageInput").addEventListener("keypress", (e) => { if (e.key === "Enter") handleSendButton(); });
+            document.querySelector(".image-upload-btn").addEventListener("click", (e) => { e.preventDefault(); document.getElementById("fileInput").click(); });
+            document.getElementById("fileInput").addEventListener("change", (e) => {
+                if (e.target.files && e.target.files[0]) {
+                    const file = e.target.files[0];
+                    if (file.type.startsWith("image/")) {
+                        const text = document.getElementById("messageInput").value.trim();
+                        handleUserImage(file, text);
+                        document.getElementById("messageInput").value = "";
+                    } else alert("Please select an image file");
+                    e.target.value = "";
+                }
             });
-            const imageLabel = document.querySelector(".image-upload-btn");
-            if (imageLabel) {
-                imageLabel.addEventListener("click", (e) => {
-                    e.preventDefault();
-                    document.getElementById("fileInput").click();
-                });
-            }
-            const changeNameBtn = document.getElementById("changeNameBtn");
-            if (changeNameBtn) changeNameBtn.addEventListener("click", changeUsername);
-            const userPanel = document.getElementById("userPanel");
-            if (userPanel) userPanel.addEventListener("click", (e) => {
-                if (e.target === changeNameBtn || changeNameBtn.contains(e.target)) return;
+            document.getElementById("changeNameBtn").addEventListener("click", changeUsername);
+            document.getElementById("userPanel").addEventListener("click", (e) => {
+                if (e.target === document.getElementById("changeNameBtn") || document.getElementById("changeNameBtn").contains(e.target)) return;
                 changeUsername();
             });
-            
-            // Start loading sequence (app hidden initially)
             startAppAfterLoading();
         }
-
-        // Delay initialization to show loader immediately
-        window.addEventListener("DOMContentLoaded", init);
+        init();
     </script>
 </body>
 </html>
