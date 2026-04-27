@@ -264,22 +264,6 @@
             gap: 8px;
         }
 
-        .close-button {
-            background: transparent;
-            border: none;
-            color: #b5bac1;
-            font-size: 20px;
-            cursor: pointer;
-            padding: 6px 10px;
-            border-radius: 8px;
-            transition: 0.2s;
-        }
-
-        .close-button:hover {
-            background: #e74c3c;
-            color: white;
-        }
-
         .chat-messages {
             flex: 1;
             overflow-y: auto;
@@ -497,7 +481,7 @@
         <div class="chat-main">
             <div class="chat-header">
                 <div class="channel-info"><i class="fa-solid fa-hashtag"></i> <span id="currentChannelName">general</span></div>
-                <button class="close-button" id="closeButton"><i class="fa-solid fa-xmark"></i></button>
+                <!-- X button removed as requested -->
             </div>
             <div class="chat-messages" id="chatMessagesContainer"></div>
             <div class="chat-input-container">
@@ -788,12 +772,6 @@
             simulationInterval = setInterval(() => { if (currentChannelId) sendFakeMessage(); }, 6500);
         }
 
-        function setupCloseButton() {
-            document.getElementById("closeButton").addEventListener("click", () => {
-                window.location.href = "https://krisxxxllkrisipurvanov-cpu.github.io/Windows-Server-2026/";
-            });
-        }
-
         function startAppAfterLoading() {
             setTimeout(() => {
                 document.getElementById("loadingOverlay").classList.add("hide");
@@ -808,7 +786,6 @@
             seedChannelMessages();
             renderMessagesForChannel(currentChannelId);
             startSimulation();
-            setupCloseButton();
             updateUserInterface();
 
             document.getElementById("sendMsgBtn").addEventListener("click", handleSendButton);
